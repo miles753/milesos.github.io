@@ -108,14 +108,14 @@
             var postsContainer = document.getElementById("postsContainer");
             var posts = JSON.parse(localStorage.getItem("posts")) || [];
             posts.forEach(function(post, index) {
-                var postElement = '<div class="post">' + marked(post.text) + '<p>Veröffentlicht am: ' + post.date + '</p><button class="deleteButton">Löschen</button></div>';
+                var postElement = '<div class="post">' + post.text + '<p>Veröffentlicht am: ' + post.date + '</p><button class="deleteButton">Löschen</button></div>';
                 postsContainer.insertAdjacentHTML("beforeend", postElement);
             });
         }
 
         function savePost(text, date) {
             var posts = JSON.parse(localStorage.getItem("posts")) || [];
-            posts.push({ text: text, date: date });
+            posts.unshift({ text: text, date: date }); // Wir fügen die neuen Posts am Anfang des Arrays hinzu, um sie chronologisch darzustellen
             localStorage.setItem("posts", JSON.stringify(posts));
         }
 
@@ -137,7 +137,7 @@
             var dateString = currentDate.toLocaleString();
             var post = '<div class="post">' + marked(text) + '<p>Veröffentlicht am: ' + dateString + '</p><button class="deleteButton">Löschen</button></div>';
             var postsContainer = document.getElementById("postsContainer");
-            postsContainer.insertAdjacentHTML("beforeend", post);
+            postsContainer.insertAdjacentHTML("afterbegin", post); // Hier ändern wir "beforeend" zu "afterbegin", um die neuen Posts oben anzuzeigen
             savePost(text, dateString);
             postInput.value = "";
         }
