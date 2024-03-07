@@ -30,6 +30,30 @@
             padding: 20px;
             margin: 20px;
         }
+        #postInput {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        #postButton {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #postButton:hover {
+            background-color: #45a049;
+        }
+        #postsContainer {
+            margin-top: 20px;
+        }
+        .post {
+            background-color: #f9f9f9;
+            border-left: 6px solid #4CAF50;
+            padding: 10px;
+            margin: 10px 0;
+        }
     </style>
 </head>
 <body>
@@ -42,11 +66,36 @@
         <a href="contact.html">Kontakt</a>
     </nav>
     <section>
-        <h2>Startseite</h2>
-        <p>Willkommen auf unserer Intranet-Website. Hier finden Sie alle wichtigen Informationen und Neuigkeiten.</p>
+        <h2>Neuen Text verfassen</h2>
+        <input type="text" id="postInput" placeholder="Hier Text eingeben">
+        <button id="postButton">Speichern</button>
+        <div id="postsContainer">
+            <!-- Hier werden die gespeicherten Posts angezeigt -->
+        </div>
     </section>
     <footer>
         <p>&copy; 2024 Meine Firma</p>
     </footer>
+
+    <script>
+        // Funktion zum Hinzufügen eines neuen Posts
+        function addPost() {
+            var postInput = document.getElementById("postInput");
+            var text = postInput.value;
+            if (text.trim() === "") {
+                alert("Bitte geben Sie einen Text ein.");
+                return;
+            }
+            var currentDate = new Date();
+            var dateString = currentDate.toLocaleString();
+            var post = '<div class="post"><p>' + text + '</p><p>Veröffentlicht am: ' + dateString + '</p></div>';
+            var postsContainer = document.getElementById("postsContainer");
+            postsContainer.insertAdjacentHTML("beforeend", post);
+            postInput.value = "";
+        }
+
+        // Event-Listener für den Speichern-Button
+        document.getElementById("postButton").addEventListener("click", addPost);
+    </script>
 </body>
 </html>
