@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meine Intranet</title>
+    <title>Meine Intranet-Website</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -80,7 +80,6 @@
             background-color: #f44336cc;
         }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
     <header>
@@ -93,7 +92,7 @@
     </nav>
     <section>
         <h2>Neuen Text verfassen</h2>
-        <textarea id="postInput" placeholder="Hier Markdown eingeben" rows="5"></textarea>
+        <input type="text" id="postInput" placeholder="Hier Text eingeben">
         <button id="postButton">Speichern</button>
         <div id="postsContainer">
             <!-- Hier werden die gespeicherten Posts angezeigt -->
@@ -108,14 +107,14 @@
             var postsContainer = document.getElementById("postsContainer");
             var posts = JSON.parse(localStorage.getItem("posts")) || [];
             posts.forEach(function(post, index) {
-                var postElement = '<div class="post">' + marked(post.text) + '<p>Veröffentlicht am: ' + post.date + '</p><button class="deleteButton">Löschen</button></div>';
+                var postElement = '<div class="post" data-index="' + index + '"><p>' + post.text + '</p><p>Veröffentlicht am: ' + post.date + '</p><button class="deleteButton">Löschen</button></div>';
                 postsContainer.insertAdjacentHTML("beforeend", postElement);
             });
         }
 
         function savePost(text, date) {
             var posts = JSON.parse(localStorage.getItem("posts")) || [];
-            posts.unshift({ text: text, date: date });
+            posts.push({ text: text, date: date });
             localStorage.setItem("posts", JSON.stringify(posts));
         }
 
@@ -135,9 +134,9 @@
             }
             var currentDate = new Date();
             var dateString = currentDate.toLocaleString();
-            var post = '<div class="post">' + marked(text) + '<p>Veröffentlicht am: ' + dateString + '</p><button class="deleteButton">Löschen</button></div>';
+            var post = '<div class="post"><p>' + text + '</p><p>Veröffentlicht am: ' + dateString + '</p><button class="deleteButton">Löschen</button></div>';
             var postsContainer = document.getElementById("postsContainer");
-            postsContainer.insertAdjacentHTML("afterbegin", post);
+            postsContainer.insertAdjacentHTML("beforeend", post);
             savePost(text, dateString);
             postInput.value = "";
         }
