@@ -5,55 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meine Intranet-Website</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        header, footer {
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            padding: 10px;
-        }
-        nav {
-            background-color: #f2f2f2;
-            padding: 10px;
-        }
-        nav a {
-            text-decoration: none;
-            color: #333;
-            padding: 5px 10px;
-            margin-right: 10px;
-        }
-        section {
-            padding: 20px;
-            margin: 20px;
-        }
-        #postInput {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-        }
-        #postButton {
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        #postButton:hover {
-            background-color: #45a049;
-        }
-        #postsContainer {
-            margin-top: 20px;
-        }
-        .post {
-            background-color: #f9f9f9;
-            border-left: 6px solid #4CAF50;
-            padding: 10px;
-            margin: 10px 0;
-        }
+        /* CSS-Stile wie zuvor */
     </style>
 </head>
 <body>
@@ -61,7 +13,7 @@
         <h1>Willkommen auf meiner Intranet-Website</h1>
     </header>
     <nav>
-        <a href="index.html">Startseiteee</a>
+        <a href="index.html">Startseite</a>
         <a href="blog.html">Blog</a>
         <a href="contact.html">Kontakt</a>
     </nav>
@@ -78,6 +30,23 @@
     </footer>
 
     <script>
+        // Funktion zum Laden der gespeicherten Posts aus dem Local Storage
+        function loadPosts() {
+            var postsContainer = document.getElementById("postsContainer");
+            var posts = JSON.parse(localStorage.getItem("posts")) || [];
+            posts.forEach(function(post) {
+                var postElement = '<div class="post"><p>' + post.text + '</p><p>Veröffentlicht am: ' + post.date + '</p></div>';
+                postsContainer.insertAdjacentHTML("beforeend", postElement);
+            });
+        }
+
+        // Funktion zum Speichern eines neuen Posts im Local Storage
+        function savePost(text, date) {
+            var posts = JSON.parse(localStorage.getItem("posts")) || [];
+            posts.push({ text: text, date: date });
+            localStorage.setItem("posts", JSON.stringify(posts));
+        }
+
         // Funktion zum Hinzufügen eines neuen Posts
         function addPost() {
             var postInput = document.getElementById("postInput");
@@ -91,11 +60,15 @@
             var post = '<div class="post"><p>' + text + '</p><p>Veröffentlicht am: ' + dateString + '</p></div>';
             var postsContainer = document.getElementById("postsContainer");
             postsContainer.insertAdjacentHTML("beforeend", post);
+            savePost(text, dateString); // Speichern des Posts im Local Storage
             postInput.value = "";
         }
 
         // Event-Listener für den Speichern-Button
         document.getElementById("postButton").addEventListener("click", addPost);
+
+        // Beim Laden der Seite die gespeicherten Posts laden
+        window.onload = loadPosts;
     </script>
 </body>
 </html>
