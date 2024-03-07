@@ -5,7 +5,80 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meine Intranet-Website</title>
     <style>
-        /* CSS-Stile wie zuvor */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #202020;
+            color: #fff;
+        }
+        header, footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+        }
+        nav {
+            background-color: #444;
+            padding: 10px;
+        }
+        nav a {
+            text-decoration: none;
+            color: #fff;
+            padding: 5px 10px;
+            margin-right: 10px;
+        }
+        section {
+            padding: 20px;
+            margin: 20px;
+            background-color: #333;
+            border-radius: 10px;
+        }
+        #postInput {
+            width: calc(100% - 140px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #444;
+            color: #fff;
+        }
+        #postButton {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        #postButton:hover {
+            background-color: #45a049;
+        }
+        #postsContainer {
+            margin-top: 20px;
+        }
+        .post {
+            background-color: #444;
+            border-left: 6px solid #4CAF50;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            position: relative;
+        }
+        .deleteButton {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            padding: 5px 10px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .deleteButton:hover {
+            background-color: #f44336cc;
+        }
     </style>
 </head>
 <body>
@@ -30,24 +103,28 @@
     </footer>
 
     <script>
-        // Funktion zum Laden der gespeicherten Posts aus dem Local Storage
         function loadPosts() {
             var postsContainer = document.getElementById("postsContainer");
             var posts = JSON.parse(localStorage.getItem("posts")) || [];
-            posts.forEach(function(post) {
-                var postElement = '<div class="post"><p>' + post.text + '</p><p>Veröffentlicht am: ' + post.date + '</p></div>';
+            posts.forEach(function(post, index) {
+                var postElement = '<div class="post" data-index="' + index + '"><p>' + post.text + '</p><p>Veröffentlicht am: ' + post.date + '</p><button class="deleteButton">Löschen</button></div>';
                 postsContainer.insertAdjacentHTML("beforeend", postElement);
             });
         }
 
-        // Funktion zum Speichern eines neuen Posts im Local Storage
         function savePost(text, date) {
             var posts = JSON.parse(localStorage.getItem("posts")) || [];
             posts.push({ text: text, date: date });
             localStorage.setItem("posts", JSON.stringify(posts));
         }
 
-        // Funktion zum Hinzufügen eines neuen Posts
+        function deletePost(index) {
+            var posts = JSON.parse(localStorage.getItem("posts")) || [];
+            posts.splice(index, 1);
+            localStorage.setItem("posts", JSON.stringify(posts));
+            location.reload(); // Seite neu laden, um die Änderungen anzuzeigen
+        }
+
         function addPost() {
             var postInput = document.getElementById("postInput");
             var text = postInput.value;
@@ -57,18 +134,24 @@
             }
             var currentDate = new Date();
             var dateString = currentDate.toLocaleString();
-            var post = '<div class="post"><p>' + text + '</p><p>Veröffentlicht am: ' + dateString + '</p></div>';
+            var post = '<div class="post"><p>' + text + '</p><p>Veröffentlicht am: ' + dateString + '</p><button class="deleteButton">Löschen</button></div>';
             var postsContainer = document.getElementById("postsContainer");
             postsContainer.insertAdjacentHTML("beforeend", post);
-            savePost(text, dateString); // Speichern des Posts im Local Storage
+            savePost(text, dateString);
             postInput.value = "";
         }
 
-        // Event-Listener für den Speichern-Button
         document.getElementById("postButton").addEventListener("click", addPost);
 
-        // Beim Laden der Seite die gespeicherten Posts laden
         window.onload = loadPosts;
+
+        // Event Delegation zum Löschen von Posts
+        document.getElementById("postsContainer").addEventListener("click", function(event) {
+            if (event.target.classList.contains("deleteButton")) {
+                var postIndex = event.target.parentNode.getAttribute("data-index");
+                deletePost(postIndex);
+            }
+        });
     </script>
 </body>
 </html>
